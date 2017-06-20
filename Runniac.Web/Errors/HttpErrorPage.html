@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html ng-app="runniac">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <link href="../Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="../Content/bootstrap.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="/" class="navbar-brand">Runniac</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="private-layout-container" class="container body-content">
+        <h1>Error en la URL introducida</h1>
+        <div class="alert alert-warning">
+            <p>Se ha producido un error. La URL introducida no se corresponde con ninguna página del sitio.</p>
+        </div>
+        <a href="/" class="btn btn-primary">Ir a Inicio</a>
+        <hr />
+        <footer>
+            <p>2014 - Runniac</p>
+        </footer>
+    </div>
+
+    <!--<script src="../Scripts/bootstrap.min.js"></script>-->
+    <script>
+        var _gaq = [['_setAccount', 'UA-XXXXX-X'], ['_trackPageview']];
+        (function (d, t) {
+            var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+            g.src = '//www.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g, s)
+        }(document, 'script'));
+    </script>
+
+</body>
+</html>

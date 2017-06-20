@@ -1,0 +1,82 @@
+﻿<div class="row">
+    <h2>Importar eventos</h2>
+    <div class="col-md-3" id="importEvents">
+        <div class="well bs-component">
+            <fieldset>
+                <legend class="smallLegend">Importar eventos de:</legend>
+                <div class="checkbox">
+                    <label>
+                        <input type="radio" value="fednav" ng-model="extractor">
+                        Federación Navarra de Atletismo
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="radio" value="todoCarreras" ng-model="extractor">
+                        Todo carreras
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="radio" value="vamosACorrer" ng-model="extractor">
+                        Vamos a correr
+                    </label>
+                </div>
+                <div class="form-group">
+                    <div class="col-lg-10 col-lg-offset-2">
+                        <button type="submit" class="btn btn-primary btn-sm" ng-click="searchEvents()">
+                            Buscar eventos
+                        </button>
+                        <span ng-show="eventsToImport.length == 0 && !searchFinished">
+                            <i class="fa-li fa fa-spinner fa-spin"></i>
+                        </span>
+                    </div>
+                </div>
+            </fieldset>
+
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="well bs-component">
+            <fieldset>
+                <legend class="smallLegend">Eventos encontrados</legend>
+                <div ng-show="eventsToImport.length">
+                    <button class="btn btn-info btn-xs" ng-click="selectAll()">Seleccionar todos</button>
+                    <button class="btn btn-info btn-xs" ng-click="unselectAll()">Deseleccionar todos</button>
+                    <table id="eventsTable" class="table table-striped table-bordered table-condensed table-hover" ts-wrapper>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th ts-criteria="Name|lowercase">Nombre</th>
+                                <th>Fecha</th>
+                                <th ts-criteria="Location|lowercase">Lugar</th>
+                                <th ts-criteria="DistanceKms|parseFloat">Distancia (km)</th>
+                                <th>Más</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="event in eventsToImport" ts-repeat>
+                                <td class="centerCellContent">
+                                    <input type="checkbox" ng-model="event.checked" ng-change="selectedEvents()">
+                                </td>
+                                <td ng-bind-html="event.Name"></td>
+                                <td ng-bind-html="event.EventDate"></td>
+                                <td ng-bind-html="event.Location"></td>
+                                <td>{{event.DistanceKms}}</td>
+                                <td>
+                                    <button ng-show="event.DetailsLink" ng-click="showEventDetails(event)" type="button" class="btn btn-xs btn-default">
+                                        <span class="glyphicon glyphicon-list-alt"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="submit" class="btn btn-primary btn-sm col-lg-4 col-lg-offset-4" ng-click="importEvents()">
+                        Importar eventos
+                    </button>
+                </div>
+            </fieldset>
+
+        </div>
+    </div>
+</div>

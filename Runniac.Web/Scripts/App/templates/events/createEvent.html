@@ -1,0 +1,187 @@
+﻿<div class="row">
+    <div class="col-lg-12">
+        <div ng-show="suggestMode == false">
+            <h2 ng-show="editMode === false">Creación de nuevos eventos</h2>
+            <h2 ng-show="editMode == true">Edición de un evento</h2>
+        </div>
+        <div class="col-lg-10 col-lg-offset-1">
+            <div class="well bs-component">
+                <form name="createEventForm" class="form-horizontal" ng-submit="saveEvent(createEventForm.$valid)" novalidate>
+                    <fieldset>
+                        <legend>Evento</legend>
+                        <div class="form-group" ng-class="{'has-error': createEventForm.name.$invalid && createEventForm.submitted }">
+                            <label for="name" class="col-lg-2 control-label">Nombre</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Nombre"
+                                       ng-model="event.Name" ng-maxlength="255" required>
+                                <div ng-show="createEventForm.name.$invalid && createEventForm.submitted">
+                                    <small class="error"
+                                           ng-show="createEventForm.name.$error.required">
+                                        Nombre requerido
+                                    </small>
+                                    <small class="error"
+                                           ng-show="createEventForm.name.$error.maxlength">
+                                        El nombre no puede tener más de 80 caracteres
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': createEventForm.eventDate.$invalid
+                            && createEventForm.submitted }">
+                            <label for="date" class="col-lg-2 control-label">Fecha y hora</label>
+                            <div class="col-lg-10">
+                                <h4><span class="label label-default">{{ event.EventDate | date:'dd/MM/yyyy hh:mm' }}</span></h4>
+                                <div ng-show="createEventForm.eventDate.$invalid && createEventForm.submitted">
+                                    <small class="error"
+                                           ng-show="createEventForm.eventDate.$error.required">Fecha y hora requerida. Asegúrate de que has seleccionado una fecha y hora con formato dd/MM/yyyy hh:mm</small>
+                                </div>
+                                <datetimepicker data-ng-model="event.EventDate" name="eventDate"
+                                                data-datetimepicker-config="{ startView:'day' }" required />
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': createEventForm.location.$invalid
+                            && createEventForm.submitted }">
+                            <label for="location" class="col-lg-2 control-label">Lugar</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" id="location" name="location" placeholder="Lugar"
+                                       ng-model="event.Location" ng-maxlength="50" required
+                                       typeahead="town for town in getTowns($viewValue) | filter:$viewValue" typeahead-min-length="3">
+                                <div ng-show="createEventForm.location.$invalid && createEventForm.submitted">
+                                    <small class="error"
+                                           ng-show="createEventForm.location.$error.required">
+                                        Lugar requerido
+                                    </small>
+                                    <small class="error"
+                                           ng-show="createEventForm.location.$error.maxlength">
+                                        El lugar no puede tener más de 50 caracteres
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="distanceName" class="col-lg-2 control-label">Tipo de carrera</label>
+                            <div class="col-lg-9">
+                                <select class="form-control" ng-model="event.Type" ng-options="d for d in distanceNames"></select>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': createEventForm.distance.$invalid
+                            && createEventForm.submitted }">
+                            <label for="distance" class="col-lg-2 control-label">Distancia (km)</label>
+                            <div class="col-lg-9">
+                                <input type="number" class="form-control" id="distance" name="distance" placeholder="Distancia"
+                                       ng-model="event.DistanceKms" min="0" max="500">
+                                <div ng-show="createEventForm.distance.$invalid && createEventForm.submitted">
+                                    <small class="error"
+                                           ng-show="createEventForm.distance.$invalid">
+                                        La distancia debe ser un número
+                                    </small>
+                                    <small class="error"
+                                           ng-show="createEventForm.distance.$error.min">
+                                        La distancia ha de ser mayor que 0 kms
+                                    </small>
+                                    <small class="error"
+                                           ng-show="createEventForm.distance.$error.max">
+                                        La distancia ha de ser menor que 500 kms
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': createEventForm.fee.$invalid
+                            && createEventForm.submitted }">
+                            <label for="fee" class="col-lg-2 control-label">Precio</label>
+                            <div class="col-lg-9">
+                                <input type="number" class="form-control" id="fee" name="fee" placeholder="Precio"
+                                       ng-model="event.Fee" maxlength="4" min="0">
+                                <div ng-show="createEventForm.fee.$invalid && createEventForm.submitted">
+                                    <small class="error"
+                                           ng-show="createEventForm.fee.$invalid">
+                                        El precio debe ser un número
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': createEventForm.url.$invalid
+                            && createEventForm.submitted }">
+                            <label for="url" class="col-lg-2 control-label">Url</label>
+                            <div class="col-lg-9">
+                                <input type="url" class="form-control" id="url" name="url" placeholder="Url"
+                                       ng-model="event.Url" selfnullifempty>
+                                <div ng-show="createEventForm.url.$invalid && createEventForm.submitted">
+                                    <small class="error"
+                                           ng-show="createEventForm.url.$error.url">
+                                        La URL debe tener un formato correcto
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': createEventForm.urlResults.$invalid
+                            && createEventForm.submitted }">
+                            <label for="urlResults" class="col-lg-2 control-label">Url de resultados</label>
+                            <div class="col-lg-9">
+                                <input type="url" class="form-control" id="urlResults" name="urlResults" placeholder="Url Resultados"
+                                       ng-model="event.ResultsUrl" selfnullifempty>
+                                <div ng-show="createEventForm.urlResults.$invalid && createEventForm.submitted">
+                                    <small class="error"
+                                           ng-show="createEventForm.urlResults.$error.url">
+                                        La URL debe tener un formato correcto
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': createEventForm.imageUrl.$invalid
+                            && createEventForm.submitted }">
+                            <label for="imageUrl" class="col-lg-2 control-label">Url del cartel</label>
+                            <div class="col-lg-9">
+                                <input type="url" class="form-control" id="imageUrl" name="imageUrl" placeholder="Url Cartel"
+                                       ng-model="event.ImageUrl" selfnullifempty>
+                                <div ng-show="createEventForm.imageUrl.$invalid && createEventForm.submitted">
+                                    <small class="error"
+                                           ng-show="createEventForm.imageUrl.$error.url">
+                                        La URL debe tener un formato correcto
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-controller="PreviewCourseCtrl">
+                            <label for="course" class="col-lg-2 control-label">Recorrido</label>
+                            <div class="col-lg-9">
+                                <span>
+                                    <span id="upload-course-btn" class="file-input btn btn-default btn-xs btn-file">
+                                        Añadir recorrido
+                                        <input type="file" ng-file-select="onFileSelect($files, $event)">
+                                    </span>
+                                    <label>En formato KML o GPX</label>
+                                </span>
+                                <openlayers ol-center="madrid" custom-layers="true" height="400">
+                                    <ol-layer ol-layer-properties="bing"></ol-layer>
+                                </openlayers>
+                                <ul class="base-layer">
+                                    <li style="display: inline" ng-repeat="imagerySet in bingBaseLayers">
+                                        <button ng-click="changeImagery($event, imagerySet)" class="btn btn-xs btn-default" ng-bind="imagerySet"
+                                                ng-class="{ active: bing.source.imagerySet === imagerySet }"></button>
+                                    </li>
+                                    <li style="display: inline">
+                                        <a ng-click="resetCourse()" class="pull-right btn btn-xs btn-danger"
+                                           title="Borra el recorrido adjuntado">
+                                            Restaurar
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-10 col-lg-offset-1">
+                                <button ng-show="editMode == false" type="submit" class="btn btn-primary pull-right">
+                                    Crear evento
+                                </button>
+                                <button ng-show="editMode == true" type="submit" class="btn btn-primary pull-right">
+                                    Editar evento
+                                </button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

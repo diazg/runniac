@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html ng-app="runniac" ng-controller="AppCtrl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="@Url.Content("~/favicon.ico")" />
+    <title ng-bind="'Runniac &dash; ' + Page.title()">Runniac - </title>
+    @Styles.Render("~/Content/css")
+</head>
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+    <!-- Navigation -->
+    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+                @Html.ActionLink("Runniac", "Index", "Home", null, new { @class = "navbar-brand page-scroll" })
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
+                <ul class="nav navbar-nav">
+                    <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    @Html.Partial("_LoginButton")
+                    <li>
+                        <a href="#suggestEvent">Sugerir un evento</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+
+    @RenderBody()
+    <footer>
+        <div class="container footer-widget">
+            <hr />
+            <div id="text-2" class="footer-widget widget_text">
+                <div class="textwidget">
+                    <a href="http://www.facebook.com/Runniac" target="_blank">
+                        <div class='sprite facebook-footer'></div>
+
+                    </a>
+                    <a href="https://twitter.com/runniac" target="_blank">
+                        <div class='sprite twitter-footer'></div>
+                    </a>
+                    <span class="pull-right">&copy; @DateTime.Now.Year - Runniac</span>
+                </div>
+
+            </div>
+            <!-- end .footer-widget -->
+        </div>
+    </footer>
+    @Scripts.Render("~/bundles/scripts")
+
+    <script>
+        var _gaq = [['_setAccount', 'UA-63064109-1'], ['_trackPageview']];
+        (function (d, t) {
+            var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+            g.src = '//www.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g, s)
+        }(document, 'script'));
+    </script>
+
+    @RenderSection("scripts", false)
+
+</body>
+</html>

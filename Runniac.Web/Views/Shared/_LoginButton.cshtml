@@ -1,0 +1,14 @@
+﻿<ul class="nav navbar-nav navbar-right">
+    @{
+        if (!WebSecurity.IsAuthenticated)
+        {
+        <li>@Html.ActionLink("Registrarme", "Register", "Account")</li>
+        <li>@Html.ActionLink("Entrar", "Login", "Account")</li> 
+        }
+        else
+        {
+        <li class="navbar-text">Hola @Session["UserFullName"]</li>
+        <li>@Html.ActionLink("Salir", "LogOff", "Account")</li>
+        }
+    }
+</ul>

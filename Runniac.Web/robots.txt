@@ -1,0 +1,9 @@
+﻿User-agent: *
+Disallow: /Content
+Disallow: /FileStorage
+Disallow: /fonts
+Disallow: /Imgs
+Disallow: /Logs
+Disallow: /Scripts
+Disallow: /Admin
+Disallow: /api

@@ -1,0 +1,44 @@
+﻿<div class="modal-header">
+    <a class="close" data-dismiss="modal" ng-click="close()">×</a>
+    <h3>{{ extraInfo.Name }}</h3>
+</div>
+<div class="modal-body" id="eventExtraInfo">
+    <div ng-show="loading">
+        <i class="fa-li fa fa-spinner fa-spin"></i>
+    </div>
+    <div ng-show="!loading">
+        <table>
+            <tr>
+                <th>Tipo de carrera:</th>
+                <td> {{ extraInfo.Type }} </td>
+            </tr>
+            <tr>
+                <th>Lugar:</th>
+                <td> {{ extraInfo.Location }} </td>
+            </tr>
+            <tr>
+                <th>Fecha:</th>
+                <td> {{ extraInfo.EventDate }} </td>
+            </tr>
+            <tr>
+                <th>Distancia:</th>
+                <td> {{ extraInfo.DistanceKms }} </td>
+            </tr>
+            <tr>
+                <th>Coste de la inscripción:</th>
+                <td> {{ extraInfo.Fee | currency}} </td>
+            </tr>
+            <tr>
+                <th>Web organizador:</th>
+                <td><a href="{{ extraInfo.Url }}">{{ extraInfo.Url }}</a> </td>
+            </tr>
+            <tr>
+                <th>Cartel:</th>
+                <td> <img ng-src="{{ extraInfo.ImageUrl }}" class="img-thumbnail" /> </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary btn-sm" ng-click="ok()">OK</button>
+</div>

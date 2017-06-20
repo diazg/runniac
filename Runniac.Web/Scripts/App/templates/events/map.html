@@ -1,0 +1,16 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;</button>
+    <h4 class="modal-title">Localización de este evento</h4>
+</div>
+<div class="modal-body">
+
+    <h5>{{event.Name}}, en {{event.Location}}</h5>
+    <div class="form-group">
+        <google-map center="map.center" zoom="map.zoom" control="map.control">
+            <marker coords='marker.coords'></marker>
+        </google-map>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary btn-sm" data-dismiss="modal" ng-click="close()">Cerrar</button>
+    </div>
+</div>

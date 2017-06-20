@@ -1,0 +1,111 @@
+﻿<div class="container body-content">
+    <div class="row">
+        <form id="searchForm" class="form-inline col-lg-10 col-lg-offset-1" role="form">
+            <div class="form-group">
+                <label class="sr-only">Lugar</label>
+                <input type="text" class="form-control" placeholder="Lugar de la carrera" ng-model="searchParams.Location"
+                       typeahead="location for location in getLocations($viewValue) | filter:$viewValue"
+                       typeahead-wait-ms="500" typeahead-min-length="3">
+            </div>
+            <div class="form-group">
+                <label class="sr-only">Tipo</label>
+                <select class="form-control" ng-model="searchParams.Type" ng-options="d for d in distanceNames">
+                    <option value="">Tipo de carrera</option>
+                </select>
+            </div>
+            <div class="form-group date-picker">
+                <input type="text" class="form-control" placeholder="Fecha hasta" datepicker-popup="dd/MM/yyyy"
+                       ng-model="searchParams.dateTo"
+                       is-open="opened" min="datePickerMinDate" close-text="Cerrar" datepicker-options="dateOptions"
+                       show-weeks="false" current-text="Hoy" toggle-weeks-text="Semanas" clear-text="Borrar"
+                       ng-click="opened = true" />
+            </div>
+            <button ng-show="!loading" type="submit" class="btn btn-sm btn-black" ng-click="searchEvents()">Buscar</button>
+            <span ng-show="loading" class="loading">
+                <i class="fa-li fa fa-spinner fa-spin"></i>
+            </span>
+            <div class="row pull-right sortingOptions">
+                <select class="form-control" data-ng-model="orderCriteria">
+                    <option value="DateWithFormat">Ordenar por fecha (ascendente)</option>
+                    <option value="-DateWithFormat">Ordenar por fecha (descendente)</option>
+                    <option value="AvgRating">Ordenar por puntuación (ascendente)</option>
+                    <option value="-AvgRating">Ordenar por puntuación (descendente)</option>
+                </select>
+            </div>
+
+        </form>
+    </div>
+    <div class="row">
+        <div id="results-bar" class="col-lg-10 col-lg-offset-1">
+            <button ng-if="displayList" class="btn btn-xs btn-default" ng-click="showMap()">
+                <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Ver mapa
+            </button>
+            <button ng-if="!displayList" class="btn btn-xs btn-default" ng-click="showList()">
+                <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Ver listado
+            </button>
+            <label>{{events.length}} eventos encontrados</label>
+        </div>
+    </div>
+    <div class="row" ng-if="displayList">
+        <div class="text-center">
+            <pagination total-items="events.length" ng-model="pagination.currentPage" max-size="pagination.maxSize"
+                        boundary-links="true" rotate="false" first-text="Primero" last-text="Último" class="pagination-sm"
+                        items-per-page="pagination.eventsPerPage" direction-links="false">
+            </pagination>
+        </div>
+        <div class="col-lg-10 col-lg-offset-1">
+            <div class="clearfix"></div>
+            <div class="row eventInfo" ng-repeat="event in filteredEvents | orderBy:orderCriteria">
+                <div class="col-sm-2">
+                    <a ng-click="zoomImage(event.ImageUrl)">
+                        <img src="{{event.ImageUrl | defaultLogoIfNotFound}}" class="img-thumbnail img-responsive eventImage">
+                    </a>
+                </div>
+                <div class="col-sm-10">
+                    <blockquote>
+                        <a href="#/eventDetail/{{event.Id}}" ng-bind-html="event.Name"></a>
+                        <br />
+                        <rating ng-model="event.AvgRating" max="10" readonly="true"></rating>
+                        <span id="raceRating" class="badge">{{event.AvgRating | zeroIfNull | number}}</span>
+                        <div class="row" ng-if="event.CourseFileName != null">
+                            <a id="showCourse" ng-click="expandMap(event)" class="no-underline">
+                                <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Ver recorrido
+                            </a>
+                        </div>
+                    </blockquote>
+                    <ul class="list-unstyled">
+                        <li><strong>Lugar:</strong> <span ng-bind-html="event.Location"></span></li>
+                        <li><strong>Fecha:</strong> <span>{{event.EventDate | dateFromStringShort }}</span></li>
+                        <li><strong>Tipo de carrera:</strong> <span ng-bind-html="event.Type"></span></li>
+                        <li ng-if="event.DistanceKms > 0"><strong>Distancia:</strong> {{event.DistanceKms}} kms</li>
+                    </ul>
+                </div>
+            </div>
+            <div id="noEventsMessage" class="row" ng-show="events.length == 0 && !loading">
+                <div class="alert alert-info">
+                    <p>No hay carreras que coincidan con los criterios de búsqueda seleccionados.</p>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <pagination total-items="events.length" ng-model="pagination.currentPage" max-size="pagination.maxSize"
+                        boundary-links="true" rotate="false" first-text="Primero" last-text="Último" class="pagination-sm"
+                        items-per-page="pagination.eventsPerPage" direction-links="false">
+            </pagination>
+        </div>
+    </div>
+    <div class="row" ng-if="!displayList">
+        <div class=" col-lg-10 col-lg-offset-1">
+            <openlayers ol-center="center" custom-layers="true" height="500">
+                <ol-layer ol-layer-properties="bing"></ol-layer>
+                <ol-marker ng-repeat="marker in markers" ol-marker-properties="marker"></ol-marker>
+            </openlayers>
+            <ul class="base-layer">
+                <li style="display: inline" ng-repeat="imagerySet in bingBaseLayers">
+                    <button ng-click="changeImagery($event, imagerySet)" class="btn btn-xs btn-default" ng-bind="imagerySet"
+                            ng-class="{ active: bing.source.imagerySet === imagerySet }"></button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

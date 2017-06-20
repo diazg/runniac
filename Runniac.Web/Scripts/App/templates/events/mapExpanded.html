@@ -1,0 +1,29 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;</button>
+    <h4 class="modal-title">{{event.Name}}, en {{event.Location}}</h4>
+</div>
+<div class="modal-body">
+    <div class="form-group">
+        <openlayers id="expandedMap" ol-center="madrid" custom-layers="true">
+            <ol-layer ol-layer-properties="bing"></ol-layer>
+        </openlayers>
+        <ul class="base-layer pull-left">
+            <li style="display: inline" ng-repeat="imagerySet in bingBaseLayers">
+                <button ng-click="changeImagery($event, imagerySet)" class="btn btn-xs btn-default" ng-bind="imagerySet"
+                        ng-class="{ active: bing.source.imagerySet === imagerySet }"></button>
+            </li>
+        </ul>
+        <div class="btn-group pull-right">
+            <button type="button" class="btn btn-xs btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                Descargar <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li ng-hide="isIeAndGpx"><a href="{{kmlDownload}}" download="mapa.kml" ng-click="exportAsKml()">Como KML</a></li>
+                <li ng-hide="isIeAndKml"><a href="{{gpxDownload}}" download="mapa.gpx" ng-click="exportAsGpx()">Como GPX</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary btn-sm" data-dismiss="modal" ng-click="close()">Cerrar</button>
+    </div>
+</div>

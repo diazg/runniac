@@ -1,0 +1,51 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancel()">&times;</button>
+    <h4 class="modal-title">Danos tu opinión</h4>
+</div>
+<div class="modal-body">
+
+    <form name="createCommentForm" role="form" novalidate>
+        <div class="col-lg-8">
+        <label for="comment">Nota: </label>
+        <rating ng-model="rate" max="10" on-hover="hoveringOver(value)" on-leave="cleanOverStar()"></rating>
+        <span class="label"
+            ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}"
+            ng-show="overStar > 0">{{percent}}%</span>
+            </div>
+        <pre style="margin: 15px 0;">Nota: <b>{{rate}}</b></pre>
+
+        <h5>Escribe un comentario</h5>
+        <div class="form-group" ng-class="{'has-error': createCommentForm.title.$invalid && submitted }">
+            <label for="comment">Título</label>
+            <input type="text" class="form-control" id="title" name="title" placeholder="Título"
+                ng-model="commentTitle" ng-maxlength="50" required />
+            <div ng-show="createCommentForm.title.$invalid && submitted">
+                <small class="error"
+                    ng-show="createCommentForm.title.$error.required">Título requerido
+                </small>
+                <small class="error"
+                    ng-show="createCommentForm.title.$error.maxlength">El título excede la longitud máxima (50 caracteres)
+                </small>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error': createCommentForm.comment.$invalid && submitted }">
+            <label for="comment">Texto</label>
+            <textarea rows="5" class="form-control" id="commentText" name="comment" placeholder="Comentario"
+                ng-model="commentText" ng-maxlength="500" required></textarea>
+            <div ng-show="createCommentForm.comment.$invalid && submitted">
+                <small class="error"
+                    ng-show="createCommentForm.comment.$error.required">Comentario requerido
+                </small>
+                <small class="error" ng-show="createCommentForm.comment.$error.maxlength">El comentario excede la longitud máxima (500 caracteres)
+                </small>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default btn-sm" data-dismiss="modal" ng-click="cancel()">Cancelar</button>
+            <button class="btn btn-primary btn-sm" ng-click="submitComment(createCommentForm.$valid)">
+                Enviar comentario</button>
+
+        </div>
+    </form>
+</div>
+</div>

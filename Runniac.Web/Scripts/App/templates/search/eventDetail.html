@@ -1,0 +1,176 @@
+﻿<div ng-controller="EventDetailCtrl">
+    <div class="col-lg-10 col-lg-offset-1 eventInfo" id="eventDetail">
+        <div class="row">
+            <div class="col-md-3" id="eventBanner">
+                <a ng-click="zoomImage(event.ImageUrl)">
+                    <img src="{{event.ImageUrl | defaultLogoIfNotFound}}" class="img-thumbnail img-responsive">
+                </a>
+                <div ng-if="event.CourseFileName.length > 0" ng-controller="PreviewCourseCtrl">
+                    <openlayers id="miniMap" ol-center="madrid" custom-layers="true" height="250px">
+                        <ol-layer ol-layer-properties="bing"></ol-layer>
+                    </openlayers>
+                    <ul id="expandBtn">
+                        <li style="display: inline">
+                            <button ng-click="expandMap(event)" class="btn btn-xs btn-default">Ampliar</button>
+                        </li>
+                    </ul>
+                </div>
+                <div ng-show="event.Url != null">
+                    <a id="signupButton" ng-href="{{event.Url}}"
+                       class="btn btn-primary btn-default col-lg-offset-3">Inscríbete</a>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <blockquote>
+                    <h2 ng-bind-html="event.Name"></h2>
+                    <rating ng-model="event.AvgRating" max="10" readonly="true"></rating>
+                    <span id="raceRating" class="badge">{{event.AvgRating | zeroIfNull | number }}</span>
+                </blockquote>
+
+                <ul class="list-unstyled">
+                    <li>
+                        <span class="glyphicon glyphicon-globe"></span>
+                        <strong>Lugar: </strong><span>{{event.Location}}</span>
+                    </li>
+                    <li>
+                        <span class="glyphicon glyphicon-calendar"></span>
+                        <strong>Fecha: </strong><span>{{event.EventDate | dateFromStringShort }}</span>
+                    </li>
+                    <li>
+                        <span class="glyphicon glyphicon-list"></span>
+                        <strong>Tipo de carrera: </strong><span ng-bind-html="event.Type"></span>
+                    </li>
+                    <li ng-if="event.DistanceKms > 0">
+                        <span class="glyphicon glyphicon-road"></span>
+                        <strong>Distancia: </strong>{{event.DistanceKms}} kms
+                    </li>
+                    <li ng-if="event.Fee > 0">
+                        <span class="glyphicon glyphicon-euro"></span>
+                        <strong>Precio inscripción: </strong>{{event.Fee | currency}}
+                    </li>
+                    <li>
+                        <span class="glyphicon glyphicon-link"></span>
+                        <strong>Sitio web: </strong><span ng-bind-html="event.Url | showLinkIfAvailable"></span>
+                    </li>
+                    <li>
+                        <span class="glyphicon glyphicon-link"></span>
+                        <strong>Resultados: </strong><span ng-bind-html="event.ResultsUrl | showLinkIfAvailable"></span>
+                    </li>
+                </ul>
+
+                <div class="ssba">
+                    <div style="text-align: left">
+                        <a class="ssba_facebook_share"
+                           href="http://www.facebook.com/sharer.php?u={{location.absUrl() | cleanHash}}"
+                           target="_blank">
+                            <div class="social sprite facebook"></div>
+                        </a>
+                        <a class="ssba_twitter_share"
+                           href="http://twitter.com/share?url={{location.absUrl() | cleanHash}}&amp;text={{event.Name}}+%40runniac"
+                           target="_blank">
+                            <div class="social sprite twitter"></div>
+                        </a>
+                        <a class="ssba_google_share"
+                           href="https://plus.google.com/share?url={{location.absUrl() | cleanHash}}"
+                           target="_blank">
+                            <div class="social sprite google"></div>
+                        </a>
+                        <a class="ssba_email_share"
+                           href="mailto:?Subject=Nuevo evento en Runniac&amp;Body=Creo que te puede interesar:%20{{location.absUrl()}}">
+                            <div class="social sprite email"></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
+                <div id="blueimp-gallery" class="blueimp-gallery">
+                    <!-- The container for the modal slides -->
+                    <div class="slides"></div>
+                    <!-- Controls for the borderless lightbox -->
+                    <h3 class="title"></h3>
+                    <a class="prev">‹</a>
+                    <a class="next">›</a>
+                    <a class="close">×</a>
+                    <a class="play-pause"></a>
+                    <ol class="indicator"></ol>
+                    <!-- The modal dialog, which will be used to wrap the lightbox content -->
+                    <div class="modal fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title"></h4>
+                                </div>
+                                <div class="modal-body next"></div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default pull-left prev">
+                                        <i class="glyphicon glyphicon-chevron-left"></i>
+                                        Previous
+                                    </button>
+                                    <button type="button" class="btn btn-primary next">
+                                        Next
+                                        <i class="glyphicon glyphicon-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="links">
+                    <a ng-repeat="p in event.Photos" ng-href="{{p.Url}}"
+                       title="Subida por {{p.User.Fullname | showOrAnonymous}} el {{p.PhotoDate}}" data-gallery>
+                        <img ng-if="$index < 6" ng-src="{{p.Url}}" class="img-thumbnail img-responsive eventGallery" />
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <ul class="pager">
+                <li>
+                    <button class="btn btn-default btn-xs" ng-click="$back()">Volver al listado</button>
+                </li>
+            </ul>
+        </div>
+
+        <fieldset>
+            <legend>
+                Comentarios <span class="badge">{{event.Comments.length}}</span>
+                <span ng-controller="PhotoUploaderCtrl">
+                    <span ng-show="isUserLoggedIn" class="file-input btn btn-default btn-xs pull-right btn-file">
+                        Subir fotos <span class="glyphicon glyphicon-picture"></span>
+                        <input type="file" multiple="" ng-file-select="onFileSelect($files)">
+                    </span>
+                </span>
+                <button id="btnWriteComment" type="button" class="btn btn-default btn-xs pull-right" ng-click="showCommentDialog()"
+                        ng-show="isUserLoggedIn">
+                    Escribe un comentario <span class="glyphicon glyphicon-comment"></span>
+                </button>
+                <span id="loginToComment" class="pull-right" ng-show="!isUserLoggedIn">
+                    <a href="/Account/Login?returnUrl=/%23/eventDetail/{{event.Id}}">Loguéate</a> para escribir un comentario o subir fotos de este evento
+                </span>
+            </legend>
+            <div id="commentsList" ng-repeat="c in event.Comments">
+                <div class="vote col-lg-1" ng-controller="VotesCtrl">
+                    <input type="hidden" name="_id_" value="12050457">
+                    <a class="vote-up" title="Estoy de acuerdo" ng-click="upVote(c)" ng-show="isUserLoggedIn">up vote</a>
+                    <span ng-show="!isUserLoggedIn">Votos</span>
+                    <span class="badge" ng-bind="c.Ranking"></span>
+                    <a class="vote-down" title="No estoy de acuerdo" ng-click="downVote(c)" ng-show="isUserLoggedIn">down vote</a>
+                </div>
+                <div class="col-lg-11">
+                    <blockquote>
+                        <p class="text-primary commentTitle"><em>&ldquo;{{c.Title}}&rdquo;</em></p>
+                        <rating ng-model="c.Rating" max="10" readonly="true"></rating>
+                        <p class="commentText">{{c.Text}}</p>
+                        <small>
+                            Escrito por <strong>{{c.User.Fullname | showOrAnonymous}}</strong>
+                            <kbd>{{c.User.Points}} <span class="glyphicon glyphicon-ok"></span></kbd>
+                            el {{c.CommentDate}}
+                        </small>
+                    </blockquote>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+﻿<div ng-controller="LandingCtrl" class="inheritHeight">
+    <header class="intro">
+        <div class="intro-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <h1 class="brand-heading">Runniac</h1>
+                        <p class="intro-text">Tu buscador de carreras populares</p>
+                        <div>
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <label class="sr-only">Lugar</label>
+                                    <input type="text" class="form-control" placeholder="Lugar de la carrera" ng-model="searchParams.Location"
+                                           typeahead="location for location in getLocations($viewValue) | filter:$viewValue" typeahead-wait-ms="500"
+                                           typeahead-min-length="3">
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only">Tipo</label>
+                                    <select class="form-control" ng-model="searchParams.Type" ng-options="d for d in distanceNames">
+                                        <option value="">Tipo de carrera</option>
+                                    </select>
+                                </div>
+                                <div class="form-group date-picker">
+                                    <input type="text" class="form-control" placeholder="Fecha hasta" datepicker-popup="dd/MM/yyyy"
+                                           ng-model="searchParams.dateTo"
+                                           is-open="opened" min="datePickerMinDate" close-text="Cerrar" datepicker-options="dateOptions"
+                                           show-weeks="false" current-text="Hoy" toggle-weeks-text="Semanas" clear-text="Borrar"
+                                           ng-click="opened = true" />
+                                </div>
+                                <button id="main-search-btn" type="submit" class="btn btn-sm btn-black" ng-click="searchEvents()">
+                                    <span ng-show="!loading">Buscar</span>
+                                    <span ng-show="loading" class="loading">
+                                        <i class="fa-li fa fa-spinner fa-spin"></i>
+                                    </span>
+                                </button>
+
+                            </form>
+                        </div>
+                        <div id="top-links">
+                            <a class="page-scroll" href="#" onclick="$('html,body').animate({ scrollTop: $('#topClosest').offset().top });return false;">Más cercanas</a>
+                            <a class="page-scroll" href="#" onclick="$('html,body').animate({ scrollTop: $('#topRated').offset().top });return false;">Más valoradas</a>
+                        </div>
+
+                        <a href="#" onclick="$('html,body').animate({ scrollTop: $('#topClosest').offset().top });return false;" class="btn btn-circle page-scroll">
+                            <i class="fa fa-angle-double-down animated"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section id="topClosest" class="container content-section text-center col-lg-6 col-lg-offset-3">
+        <h2>Carreras más cercanas a ti</h2>
+        <div ng-if="topClosestEvents.length > 0">
+            <div class="eventPreview" ng-repeat="e in topClosestEvents">
+                <a href="#/eventDetail/{{e.Id}}">
+                    <div class="eventPreviewPhoto">
+                        <img ng-src="{{e.ImageUrl | defaultLogoIfNotFound}}" class="img-responsive" />
+                    </div>
+                    <div class="eventPreviewInfo">
+                        <div id="eventName" title="{{e.Name}}">{{e.Name}}</div>
+                        <p>{{e.Location}}</p>
+                        <p class="pull-right">{{e.EventDate | dateFromStringShort}}</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div ng-if="!topClosestEvents">
+            <p>No hemos encontrado carreras cercanas a ti. ¿Estás seguro que has compartido tu ubicación con nosotros?</p>
+        </div>
+    </section>
+    <section id="topRated" class="container content-section text-center col-lg-6 col-lg-offset-3">
+        <h2>Carreras mejor valoradas</h2>
+        <div class="eventPreview" ng-repeat="e in topRatedEvents">
+            <a href="#/eventDetail/{{e.Id}}">
+                <div class="eventPreviewPhoto">
+                    <img ng-src="{{e.ImageUrl | defaultLogoIfNotFound}}" class="img-responsive" />
+                </div>
+                <div class="eventPreviewInfo">
+                    <div id="eventName" title="{{e.Name}}">{{e.Name}}</div>
+                    <p>{{e.Location}}</p>
+                    <p class="pull-right">{{e.EventDate | dateFromStringShort}}</p>
+                </div>
+            </a>
+        </div>
+    </section>
+    <span id="top-link-block" class="hidden">
+        <a href="#top" class="well well-sm" onclick="$('html,body').animate({scrollTop:0},'slow');return false;">
+            <i class="glyphicon glyphicon-chevron-up"></i> Volver arriba
+        </a>
+    </span>
+</div>
